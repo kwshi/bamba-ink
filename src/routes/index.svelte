@@ -1,5 +1,6 @@
 <script>
   import { onMount } from "svelte";
+  import { stores } from "@sapper/app";
 
   import WorkCanvas from "@/components/WorkCanvas";
 
@@ -20,11 +21,15 @@
 
   let color: Colors.Color = Colors.Color.Black;
 
+  const { page } = stores();
+
   onMount(() => {
     persistentCtx = persistentCanvas.getContext("2d")!;
 
-    ws = new WebSocket("ws://localhost:1234");
-    ws.addEventListener("open", () => {});
+    ws = new WebSocket(`ws://${$page.host}/ws`);
+    ws.addEventListener("open", () => {
+      console.log("connection opened");
+    });
     ws.addEventListener("message", (msg) => {
       drawStroke(JSON.parse(msg.data));
     });
