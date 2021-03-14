@@ -3,6 +3,7 @@ dependencies:
   katex: 0.13.0
   polka: 0.5.2
   sirv: 1.0.11
+  uuid: 8.3.2
   ws: 7.4.4
 devDependencies:
   '@babel/core': 7.13.10
@@ -22,6 +23,7 @@ devDependencies:
   '@types/katex': 0.11.0
   '@types/node': 14.14.34
   '@types/polka': 0.5.2
+  '@types/uuid': 8.3.0
   '@types/ws': 7.4.0
   autoprefixer: 10.2.5_postcss@8.2.8
   postcss: 8.2.8
@@ -1243,6 +1245,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-4LPNrqSJknLzILMVXn2P/mh0djNgFvom4T9Y1hmhaB8OBm1cY71bMMSrGRu1q5qF4JZzY6iaGT11BHmCMY/NZg==
+  /@types/uuid/8.3.0:
+    dev: true
+    resolution:
+      integrity: sha512-eQ9qFW/fhfGJF8WKHGEHZEyVWfZxrT+6CLIJGBcZPfxUh/+BnEj+UCGYMlr9qZuX/2AltsvwrGqp0LhEW8D0zQ==
   /@types/ws/7.4.0:
     dependencies:
       '@types/node': 14.14.34
@@ -4274,6 +4280,11 @@ packages:
     dev: true
     resolution:
       integrity: sha512-g9JpC/3He3bm38zsLupWryXHoEcS22YHthuPQSJdMy6KNrzIRzWqcsHzD/WUnqe45whVou4VIsPew37DoXWNrA==
+  /uuid/8.3.2:
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
   /validate-npm-package-license/3.0.4:
     dependencies:
       spdx-correct: 3.1.1
@@ -4355,6 +4366,7 @@ specifiers:
   '@types/katex': ^0.11.0
   '@types/node': ^14.14.34
   '@types/polka': ^0.5.2
+  '@types/uuid': ^8.3.0
   '@types/ws': ^7.4.0
   autoprefixer: ^10.2.5
   compression: ^1.7.4
@@ -4380,4 +4392,5 @@ specifiers:
   ts-node-dev: ^1.1.6
   tslib: ^2.1.0
   typescript: ^4.2.3
+  uuid: ^8.3.2
   ws: ^7.4.4

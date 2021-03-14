@@ -2,64 +2,78 @@
   import { onMount } from "svelte";
   import { stores } from "@sapper/app";
 
-  import WorkCanvas from "@/components/WorkCanvas";
+  import WorkLayer from "@/components/WorkLayer.svelte";
+  import CommitLayer from "@/components/CommitLayer.svelte";
 
   import * as Colors from "./_colors";
+  import * as Msg from "@/common/msg";
+  import * as Board from "@/common/board";
 
   let ws: WebSocket;
 
-  let persistentCanvas: HTMLCanvasElement;
-  let persistentCtx: CanvasRenderingContext2D;
+  //let persistentCanvas: HTMLCanvasElement;
+  //let persistentCtx: CanvasRenderingContext2D;
 
   let screenWidth: number;
   let screenHeight: number;
 
-  let drawing: boolean = false;
-  let start: [number, number] = [0, 0];
+  //let drawing: boolean = false;
+  //let start: [number, number] = [0, 0];
 
-  let paths: [number, number][][] = [];
+  let strokes: [number, number][][] = [];
 
   let color: Colors.Color = Colors.Color.Black;
 
   const { page } = stores();
 
-  onMount(() => {
-    persistentCtx = persistentCanvas.getContext("2d")!;
+  let board = new Board.Page();
 
+  const start = (pt: [number, number]) => {
+    const msg: Msg.ClientMsg = {
+      type: Msg.ClientType.WorkStart,
+      data: pt,
+    };
+    ws.send(JSON.stringify(msg));
+  };
+  const update = (pt: [number, number]) => {
+    const msg: Msg.ClientMsg = {
+      type: Msg.ClientType.WorkMove,
+      data: pt,
+    };
+    ws.send(JSON.stringify(msg));
+  };
+  const commit = (s: [number, number][]) => {
+    strokes = [...strokes, s];
+    const msg: Msg.ClientMsg = {
+      type: Msg.ClientType.Commit,
+      data: null,
+    };
+    ws.send(JSON.stringify(msg));
+  };
+
+  onMount(() => {
     ws = new WebSocket(`ws://${$page.host}/ws`);
     ws.addEventListener("open", () => {
       console.log("connection opened");
     });
-    ws.addEventListener("message", (msg) => {
-      drawStroke(JSON.parse(msg.data));
+    ws.addEventListener("message", ({ data }: MessageEvent<string>) => {
+      const msg: Msg.HostMsg = JSON.parse(data);
+      switch (msg.type) {
+        case Msg.HostType.WorkStart:
+          board.workStart(msg.data.uuid, msg.data.point);
+          board = board;
+          break;
+        case Msg.HostType.WorkMove:
+          board.workMove(msg.data.uuid, msg.data.point);
+          board = board;
+          break;
+        case Msg.HostType.Commit:
+          board.commit(msg.data.uuid);
+          board = board;
+          break;
+      }
     });
   });
-
-  $: {
-    if (persistentCanvas) {
-      persistentCanvas.width = screenWidth;
-      persistentCanvas.height = screenHeight;
-
-      persistentCtx.lineWidth = 2;
-      persistentCtx.lineCap = "round";
-      persistentCtx.lineJoin = "round";
-    }
-  }
-
-  const drawStroke = (stroke: [number, number][]) => {
-    if (!stroke.length) return;
-
-    const [first, ...rest] = stroke;
-    persistentCtx.beginPath();
-    persistentCtx.moveTo(...first);
-    for (const pt of rest) persistentCtx.lineTo(...pt);
-    persistentCtx.stroke();
-  };
-
-  const addStroke = (stroke: [number, number][]) => {
-    drawStroke(stroke);
-    ws.send(JSON.stringify(stroke));
-  };
 </script>
 
 <svelte:window bind:innerWidth={screenWidth} bind:innerHeight={screenHeight} />
@@ -74,9 +88,14 @@
   />
 </svelte:head>
 
-<canvas bind:this={persistentCanvas} />
+<CommitLayer
+  strokes={strokes.concat(
+    ...Object.values(board.commits),
+    Object.values(board.work)
+  )}
+/>
 
-<WorkCanvas onStroke={addStroke} />
+<WorkLayer onStart={start} onMove={update} onCommit={commit} />
 
 <div class="controls-wrapper">
   <div class="controls">
@@ -95,10 +114,6 @@
 <style>
   :global body {
     @apply bg-gray-50 font-sans;
-  }
-
-  canvas {
-    @apply absolute inset-0;
   }
 
   .controls-wrapper {
