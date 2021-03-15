@@ -58,12 +58,22 @@
     ws = new WebSocket(
       `ws://${$page.host}/ws/board/${encodeURIComponent(boardKey)}`
     );
+
     ws.addEventListener("open", () => {
       console.log("connection opened");
+      const msg: Msg.ClientMsg = {
+        type: Msg.ClientType.Join,
+        data: null,
+      };
+      ws.send(JSON.stringify(msg));
     });
     ws.addEventListener("message", ({ data }: MessageEvent<string>) => {
       const msg: Msg.HostMsg = JSON.parse(data);
       switch (msg.type) {
+        case Msg.HostType.Init:
+          board.init(msg.data);
+          board = board;
+          break;
         case Msg.HostType.WorkStart:
           board.workStart(msg.data.uuid, msg.data.point);
           board = board;

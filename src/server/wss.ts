@@ -7,7 +7,9 @@ import * as Uid from "uid";
 import * as Pr from "path-to-regexp";
 
 interface Session {
+  roomId: string;
   clientId: string;
+  reply(msg: Msg.HostMsg): void;
   sendAll(msg: Msg.HostMsg): void;
   sendOthers(msg: Msg.HostMsg): void;
 }
@@ -50,12 +52,16 @@ export const setup = (http: Http.Server, handlers: Handlers) => {
     if (!match) return;
 
     const clientId = Uid.uid();
-    const { roomId } = match.params;
-    const room = getRoom(rooms, roomId);
+    const room = getRoom(rooms, match.params.roomId);
     room.set(clientId, ws);
+    // TODO sanitize roomid
 
     const session: Session = {
+      roomId: match.params.roomId,
       clientId,
+      reply(msg) {
+        ws.send(JSON.stringify(msg));
+      },
       sendAll(msg) {
         const s = JSON.stringify(msg);
         for (const ws of room.values()) ws.send(s);

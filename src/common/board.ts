@@ -9,6 +9,12 @@ export class Page {
     this.commits = {};
   }
 
+  init(strokes: Stroke[]) {
+    // TODO bad
+    this.commits["init"] ||= [];
+    this.commits["init"].push(...strokes);
+  }
+
   workStart(uuid: string, point: Point) {
     this.work[uuid] = [point];
   }

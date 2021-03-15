@@ -31,7 +31,7 @@ export enum HostType {
 }
 
 export interface HostData {
-  [HostType.Init]: { strokes: Stroke.Stroke[] };
+  [HostType.Init]: Stroke.Stroke[];
   [HostType.WorkStart]: { uuid: string; point: Stroke.Point };
   [HostType.WorkMove]: { uuid: string; point: Stroke.Point };
   [HostType.Commit]: { uuid: string };
