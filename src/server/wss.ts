@@ -72,6 +72,23 @@ export const setup = (http: Http.Server, handlers: Handlers) => {
       },
     };
 
+    let alive = true;
+    const ping = () => {
+      if (!alive) {
+        room.delete(clientId);
+        ws.terminate();
+        return;
+      }
+      ws.ping();
+      setTimeout(ping, 10000);
+    };
+
+    ws.on("pong", () => {
+      console.log(`got pong from ${clientId}`);
+      alive = true;
+    });
+    setTimeout(ping, 10000);
+
     ws.on("message", (raw) => {
       // TODO type safety
       const msg = JSON.parse(raw.toString()) as Msg.ClientMsg;
