@@ -1,16 +1,23 @@
-import type { Point, Stroke } from "./stroke";
+import type * as Stroke from "./stroke";
 
-export type ToUnion<T> = { [K in keyof T]: { type: K; data: T[K] } }[keyof T];
+import * as Util from "./util";
+import * as Io from "io-ts";
+
+export type ToUnion<T> = {
+  [K in keyof T]: { type: K } & (T[K] extends void ? {} : { data: T[K] });
+}[keyof T];
 
 export enum ClientType {
+  Join,
   WorkStart,
   WorkMove,
   Commit,
 }
 
 export interface ClientData {
-  [ClientType.WorkStart]: Point;
-  [ClientType.WorkMove]: Point;
+  [ClientType.Join]: null;
+  [ClientType.WorkStart]: { pt: Stroke.Point; style: Stroke.Style };
+  [ClientType.WorkMove]: { pt: Stroke.Point };
   [ClientType.Commit]: null;
 }
 
@@ -24,9 +31,9 @@ export enum HostType {
 }
 
 export interface HostData {
-  [HostType.Init]: { strokes: Stroke[] };
-  [HostType.WorkStart]: { uuid: string; point: Point };
-  [HostType.WorkMove]: { uuid: string; point: Point };
+  [HostType.Init]: { strokes: Stroke.Stroke[] };
+  [HostType.WorkStart]: { uuid: string; point: Stroke.Point };
+  [HostType.WorkMove]: { uuid: string; point: Stroke.Point };
   [HostType.Commit]: { uuid: string };
 }
 

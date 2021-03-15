@@ -2,6 +2,7 @@ import * as Path from "path";
 import rollupResolve from "@rollup/plugin-node-resolve";
 import rollupReplace from "@rollup/plugin-replace";
 import rollupAlias from "@rollup/plugin-alias";
+import rollupJson from "@rollup/plugin-json";
 import commonjs from "@rollup/plugin-commonjs";
 import url from "@rollup/plugin-url";
 import rollupSvelte from "rollup-plugin-svelte";
@@ -45,12 +46,13 @@ const resolveOpts = {
 
 export default {
   client: {
-    input: config.client.input().replace(/\.js$/, ".ts"),
+    input: Path.join(__dirname, "src/client.ts"),
     output: config.client.output(),
     plugins: [
       alias,
       rollupReplace(replace),
       rollupTs({ sourceMap: dev }),
+      rollupJson(),
       rollupSvelte({ ...svConf, compilerOptions: { hydratable: true } }),
       url({
         sourceDir: Path.resolve(__dirname, "src/node_modules/images"),
@@ -94,12 +96,13 @@ export default {
   },
 
   server: {
-    input: { server: config.server.input().server.replace(/\.js$/, ".ts") },
+    input: { server: Path.join(__dirname, "src/server/index.ts") },
     output: config.server.output(),
     plugins: [
       alias,
       rollupReplace(replace),
       rollupTs({ sourceMap: dev }),
+      rollupJson(),
       rollupSvelte({
         ...svConf,
         compilerOptions: { generate: "ssr", hydratable: true },
@@ -120,7 +123,7 @@ export default {
   },
 
   serviceworker: {
-    input: config.serviceworker.input().replace(/\.js$/, ".ts"),
+    input: Path.join(__dirname, "src/worker/index.ts"),
     output: config.serviceworker.output(),
     plugins: [
       rollupResolve(),

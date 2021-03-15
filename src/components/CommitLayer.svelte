@@ -14,7 +14,14 @@
 </script>
 
 <svg width="100%" height="100%">
-  <path stroke="black" fill="none" stroke-width="2" {d} />
+  <path
+    stroke="black"
+    fill="none"
+    stroke-width="2"
+    stroke-linejoin="round"
+    stroke-linecap="round"
+    {d}
+  />
 </svg>
 
 <style>

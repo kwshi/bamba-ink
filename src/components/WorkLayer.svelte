@@ -50,7 +50,14 @@
   on:mousemove={move}
   on:mouseup={end}
 >
-  <path stroke="red" fill="none" stroke-width="2" {d} />
+  <path
+    stroke="red"
+    fill="none"
+    stroke-width="2"
+    stroke-linejoin="round"
+    stroke-linecap="round"
+    {d}
+  />
 </svg>
 
 <style>

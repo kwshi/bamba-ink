@@ -3,6 +3,8 @@
   "compilerOptions": {
     "lib": ["DOM", "ES2017", "WebWorker"],
     "strict": true,
+    "baseUrl": ".",
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "@/*": ["./src/*"]
     }
