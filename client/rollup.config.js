@@ -3,16 +3,18 @@ import rollupResolve from "@rollup/plugin-node-resolve";
 import rollupReplace from "@rollup/plugin-replace";
 import rollupAlias from "@rollup/plugin-alias";
 import rollupJson from "@rollup/plugin-json";
-import commonjs from "@rollup/plugin-commonjs";
-import url from "@rollup/plugin-url";
+import rollupCjs from "@rollup/plugin-commonjs";
+import rollupUrl from "@rollup/plugin-url";
 import rollupSvelte from "rollup-plugin-svelte";
 import babel from "@rollup/plugin-babel";
 import { terser } from "rollup-plugin-terser";
-import rollupTs from "@rollup/plugin-typescript";
+import rollupTs from "rollup-plugin-typescript2";
 import config from "sapper/config/rollup.js";
 import pkg from "./package.json";
+import * as Dotenv from "dotenv";
 
-const svConf = require("./svelte.config.js");
+Dotenv.config({ path: Path.join(__dirname, "dev.env") });
+if (!process.env.WS_URL) throw new Error("WS_URL not defined");
 
 const mode = process.env.NODE_ENV;
 const dev = mode === "development";
@@ -25,42 +27,60 @@ const onwarn = (warning, onwarn) =>
   warning.code === "THIS_IS_UNDEFINED" ||
   onwarn(warning);
 
-const replace = {
-  preventAssignment: true,
-  values: {
-    "process.browser": true,
-    "process.env.NODE_ENV": JSON.stringify(mode),
-  },
-};
+const commonPlugins = ({ ssr }) => [
+  rollupAlias({
+    entries: {
+      "@bamba/common": Path.join(__dirname, "../common/src"),
+      "@/components": Path.join(__dirname, "src/components"),
+    },
+  }),
+  rollupReplace({
+    preventAssignment: true,
+    values: {
+      "process.browser": true,
+      "process.env.NODE_ENV": JSON.stringify(mode),
+    },
+  }),
+  rollupConfig({
+    alias: "@/config",
+    values: {
+      wsUrl: process.env.WS_URL,
+    },
+  }),
+  rollupTs({
+    sourceMap: dev,
+  }),
+  rollupJson(),
+  rollupSvelte({
+    ...require("./svelte.config.js"),
+    compilerOptions: { generate: ssr ? "ssr" : undefined, hydratable: true },
+  }),
+  rollupUrl({
+    sourceDir: Path.resolve(__dirname, "src/node_modules/images"),
+    publicPath: "/client/",
+    emitFiles: !ssr,
+  }),
+  rollupResolve({
+    dedupe: ["svelte"],
+    extensions: [".mjs", ".node", ".ts", ".js", ".json", ".svelte"],
+    browser: !ssr,
+  }),
+  rollupCjs(),
+];
 
-const alias = rollupAlias({
-  entries: {
-    "@": Path.join(__dirname, "src"),
-  },
+const rollupConfig = ({ alias, values }) => ({
+  name: "rollup-config",
+  resolveId: (source) => (source === alias ? source : null),
+  load: (id) =>
+    id === alias ? `export default ${JSON.stringify(values)}` : null,
 });
-
-const resolveOpts = {
-  dedupe: ["svelte"],
-  extensions: [".mjs", ".node", ".ts", ".js", ".json", ".svelte"],
-};
 
 export default {
   client: {
     input: Path.join(__dirname, "src/client.ts"),
     output: config.client.output(),
     plugins: [
-      alias,
-      rollupReplace(replace),
-      rollupTs({ sourceMap: dev }),
-      rollupJson(),
-      rollupSvelte({ ...svConf, compilerOptions: { hydratable: true } }),
-      url({
-        sourceDir: Path.resolve(__dirname, "src/node_modules/images"),
-        publicPath: "/client/",
-      }),
-      rollupResolve({ ...resolveOpts, browser: true }),
-      commonjs(),
-
+      ...commonPlugins({ ssr: false }),
       legacy &&
         babel({
           extensions: [".js", ".mjs", ".html", ".svelte"],
@@ -96,25 +116,9 @@ export default {
   },
 
   server: {
-    input: { server: Path.join(__dirname, "src/server/index.ts") },
+    input: { server: Path.join(__dirname, "src/server.ts") },
     output: config.server.output(),
-    plugins: [
-      alias,
-      rollupReplace(replace),
-      rollupTs({ sourceMap: dev }),
-      rollupJson(),
-      rollupSvelte({
-        ...svConf,
-        compilerOptions: { generate: "ssr", hydratable: true },
-      }),
-      url({
-        sourceDir: Path.resolve(__dirname, "src/node_modules/images"),
-        publicPath: "/client/",
-        emitFiles: false, // already emitted by client build
-      }),
-      rollupResolve(resolveOpts),
-      commonjs(),
-    ],
+    plugins: [...commonPlugins({ ssr: true })],
     external: Object.keys(pkg.dependencies).concat(
       require("module").builtinModules
     ),
@@ -127,8 +131,8 @@ export default {
     output: config.serviceworker.output(),
     plugins: [
       rollupResolve(),
-      replace,
-      commonjs(),
+      rollupReplace,
+      rollupCjs(),
       rollupTs({ sourceMap: dev }),
       !dev && terser(),
     ],

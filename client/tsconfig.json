@@ -4,11 +4,12 @@
     "lib": ["DOM", "ES2017", "WebWorker"],
     "strict": true,
     "baseUrl": ".",
+    "rootDir": "..",
     "allowSyntheticDefaultImports": true,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "paths": { "@bamba/common/*": ["../common/src/*"] },
+    "typeRoots": ["./node_modules/@types", "./src/declarations"]
   },
+  "references": [{ "path": "../common" }],
   "include": ["src/**/*", "src/node_modules/**/*"],
   "exclude": ["node_modules/*", "__sapper__/*", "static/*"]
 }

@@ -6,8 +6,14 @@
   import CommitLayer from "@/components/CommitLayer.svelte";
 
   import * as Colors from "./_colors";
-  import * as Msg from "@/common/msg";
-  import * as Board from "@/common/board";
+  import * as Msg from "@bamba/common/msg";
+  import * as Board from "@bamba/common/board";
+
+  import * as Qs from "query-string";
+
+  import Cfg from "@/config";
+
+  console.log(Cfg);
 
   let ws: WebSocket;
 
@@ -27,6 +33,7 @@
   const { page } = stores();
 
   let board = new Board.Page();
+  const boardKey = $page.params.board;
 
   const start = (pt: [number, number]) => {
     const msg: Msg.ClientMsg = {
@@ -52,13 +59,25 @@
   };
 
   onMount(() => {
-    ws = new WebSocket(`ws://${$page.host}/ws`);
+    ws = new WebSocket(
+      `ws://localhost:8483/ws/board/${encodeURIComponent(boardKey)}`
+    );
+
     ws.addEventListener("open", () => {
       console.log("connection opened");
+      const msg: Msg.ClientMsg = {
+        type: Msg.ClientType.Join,
+        data: null,
+      };
+      ws.send(JSON.stringify(msg));
     });
     ws.addEventListener("message", ({ data }: MessageEvent<string>) => {
       const msg: Msg.HostMsg = JSON.parse(data);
       switch (msg.type) {
+        case Msg.HostType.Init:
+          board.init(msg.data);
+          board = board;
+          break;
         case Msg.HostType.WorkStart:
           board.workStart(msg.data.uuid, msg.data.point);
           board = board;
@@ -99,6 +118,9 @@
 
 <div class="controls-wrapper">
   <div class="controls">
+    <div class="name">
+      {boardKey}
+    </div>
     <div class="colors">
       {#each Object.values(Colors.Color) as clr}
         <button
@@ -117,16 +139,22 @@
   }
 
   .controls-wrapper {
-    @apply absolute bottom-4 left-0 right-0 
+    @apply absolute bottom-4 left-1/2
       flex justify-center;
   }
 
   .controls {
-    @apply bg-gray-100 
+    @apply relative -left-1/2
+      bg-gray-100 
       border border-solid border-gray-300 
     shadow 
     rounded
-      px-4 py-2;
+    px-4 py-2
+    grid grid-flow-col gap-x-4;
+
+    .name {
+      @apply font-bold;
+    }
 
     .colors {
       @apply flex flex-row;

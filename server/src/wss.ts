@@ -1,8 +1,7 @@
-import type * as Http from "http";
-import type * as Net from "net";
-import type * as Msg from "@/common/msg";
+import type * as Msg from "@bamba/common/msg";
 
-import WebSocket, * as Ws from "ws";
+import * as Ws from "ws";
+import WebSocket = require("ws");
 import * as Uid from "uid";
 import * as Pr from "path-to-regexp";
 
@@ -34,17 +33,9 @@ const getRoom = (
   return room;
 };
 
-export const setup = (http: Http.Server, handlers: Handlers) => {
-  const wss = new Ws.Server({ noServer: true });
+export const setup = (opts: Ws.ServerOptions, handlers: Handlers) => {
+  const wss = new Ws.Server(opts);
   const rooms: Map<string, Map<string, WebSocket>> = new Map();
-
-  http.on(
-    "upgrade",
-    (req: Http.IncomingMessage, socket: Net.Socket, head: Buffer) =>
-      wss.handleUpgrade(req, socket, head, (ws) =>
-        wss.emit("connection", ws, req)
-      )
-  );
 
   wss.on("connection", (ws, req) => {
     if (!req.url) return;

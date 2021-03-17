@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "outDir": "dist",
+    "rootDir": "..",
+    "baseUrl": ".",
+    "paths": { "@bamba/common/*": ["../common/src/*"] },
+    "downlevelIteration": true,
+    "composite": true
+  },
+  "references": [{ "path": "../common" }]
+}

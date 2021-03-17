@@ -1,0 +1,20 @@
+dependencies:
+  fp-ts: 2.9.5
+  io-ts: 2.2.16_fp-ts@2.9.5
+lockfileVersion: 5.2
+packages:
+  /fp-ts/2.9.5:
+    dev: false
+    resolution:
+      integrity: sha512-MiHrA5teO6t8zKArE3DdMPT/Db6v2GUt5yfWnhBTrrsVfeCJUUnV6sgFvjGNBKDmEMqVwRFkEePL7wPwqrLKKA==
+  /io-ts/2.2.16_fp-ts@2.9.5:
+    dependencies:
+      fp-ts: 2.9.5
+    dev: false
+    peerDependencies:
+      fp-ts: ^2.5.0
+    resolution:
+      integrity: sha512-y5TTSa6VP6le0hhmIyN0dqEXkrZeJLeC5KApJq6VLci3UEKF80lZ+KuoUs02RhBxNWlrqSNxzfI7otLX1Euv8Q==
+specifiers:
+  fp-ts: ^2.9.5
+  io-ts: ^2.2.16

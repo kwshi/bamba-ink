@@ -1,5 +1,5 @@
 import type * as Wss from "./wss";
-import * as Msg from "@/common/msg";
+import * as Msg from "@bamba/common/msg";
 
 import * as Redis from "./redis";
 
@@ -36,8 +36,7 @@ export const handlers: Wss.Handlers = {
     );
   },
   [Msg.ClientType.WorkStart]: (session, data) => {
-    if (!Array.isArray(data)) return;
-    const [x, y] = <unknown[]>data;
+    const [x, y] = data;
     if (typeof x !== "number" || typeof y !== "number") return;
 
     session.sendOthers({
@@ -52,8 +51,7 @@ export const handlers: Wss.Handlers = {
       .exec();
   },
   [Msg.ClientType.WorkMove]: (session, data) => {
-    if (!Array.isArray(data)) return;
-    const [x, y] = <unknown[]>data;
+    const [x, y] = data;
     if (typeof x !== "number" || typeof y !== "number") return;
 
     session.sendOthers({
