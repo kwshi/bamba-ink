@@ -1,7 +1,7 @@
 {
-  "scripts": {
-    "postinstall": "cd client && npm install"
-  },
+	"scripts": {
+		"postinstall": "cd client && npm install"
+	},
 	"devDependencies": {
 		"@types/node": "^14.14.35",
 		"@types/redis": "^2.8.28",
@@ -19,6 +19,7 @@
 		"dotenv": "^8.2.0",
 		"path-to-regexp": "^6.2.0",
 		"redis": "^3.0.2",
+		"serverless-http": "^2.7.0",
 		"uid": "^2.0.0",
 		"ws": "^7.4.4"
 	}

@@ -2,6 +2,7 @@ dependencies:
   dotenv: 8.2.0
   path-to-regexp: 6.2.0
   redis: 3.0.2
+  serverless-http: 2.7.0
   uid: 2.0.0
   ws: 7.4.4
 devDependencies:
@@ -24,6 +25,11 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-ruuGHsnabmObBdeMg3vKdGRmh06Oog3eFpf/Tk6X0kDSJDpJTDCj2dqdp1+0VjzIUgHlFF9GBm7uFqfYhhdX9g==
+  /@types/aws-lambda/8.10.72:
+    dev: false
+    optional: true
+    resolution:
+      integrity: sha512-jOrTwAhSiUtBIN/QsWNKlI4+4aDtpZ0sr2BRvKW6XQZdspgHUSHPcuzxbzCRiHUiDQ+0026u5TSE38VyIhNnfA==
   /@types/json5/0.0.29:
     dev: true
     resolution:
@@ -687,6 +693,14 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==
+  /serverless-http/2.7.0:
+    dev: false
+    engines:
+      node: '>=8.0'
+    optionalDependencies:
+      '@types/aws-lambda': 8.10.72
+    resolution:
+      integrity: sha512-iWq0z1X2Xkuvz6wL305uCux/SypbojHlYsB5bzmF5TqoLYsdvMNIoCsgtWjwqWoo3AR2cjw3zAmHN2+U6mF99Q==
   /shimport/2.0.5:
     dev: true
     resolution:
@@ -932,6 +946,7 @@ specifiers:
   redis: ^3.0.2
   rollup: ^2.41.5
   sapper: ^0.29.1
+  serverless-http: ^2.7.0
   ts-node: ^9.1.1
   ts-node-dev: ^1.1.6
   tsconfig-paths: ^3.9.0
