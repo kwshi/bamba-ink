@@ -4,7 +4,7 @@ import polka from "polka";
 import compression from "compression";
 import * as Sapper from "@sapper/server";
 
-polka()
+export default polka()
   .use(
     compression({ threshold: 0 }),
     sirv(Path.join(__dirname, "../static"), {
