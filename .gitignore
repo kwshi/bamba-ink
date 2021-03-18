@@ -6,3 +6,6 @@ yarn-error.log
 
 !/client/src/node_modules
 /client/src/node_modules/@sapper/
+
+# Local Netlify folder
+.netlify
