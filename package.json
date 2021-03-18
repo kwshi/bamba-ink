@@ -19,6 +19,7 @@
   "dependencies": {
     "compression": "^1.7.4",
     "dotenv": "^8.2.0",
+    "encoding": "^0.1.13",
     "path-to-regexp": "^6.2.0",
     "polka": "^0.5.2",
     "redis": "^3.0.2",
