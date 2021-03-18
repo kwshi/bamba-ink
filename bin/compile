@@ -5,6 +5,6 @@ CACHE_DIR=$2
 PROJECT_DIR="$BUILD_DIR/server"
 TMP_DIR=$(mktemp -d "$CACHE_DIR/tmp-XXXXXX")
 
-mv -T "$PROJECT_PATH" "$TMP_DIR"
+mv -T "$PROJECT_DIR" "$TMP_DIR"
 rm -rf "$BUILD_DIR"
 mv -T "$TMP_DIR" "$BUILD_DIR"
