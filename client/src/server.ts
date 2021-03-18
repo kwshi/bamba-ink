@@ -1,3 +1,4 @@
+import * as Path from "path";
 import sirv from "sirv";
 import polka from "polka";
 import compression from "compression";
@@ -6,7 +7,9 @@ import * as Sapper from "@sapper/server";
 polka()
   .use(
     compression({ threshold: 0 }),
-    sirv("static", { dev: process.env.NODE_ENV === "development" }),
+    sirv(Path.join(__dirname, "../static"), {
+      dev: process.env.NODE_ENV === "development",
+    }),
     Sapper.middleware()
   )
   .listen(process.env.PORT, (err: Error) => {
