@@ -1,6 +1,6 @@
 {
-  "name": "TODO",
-  "description": "TODO",
+  "name": "@bamba/client",
+  "description": "bamba.ink frontend",
   "version": "0.0.1",
   "scripts": {
     "dev:sapper": "sapper dev",
