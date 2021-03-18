@@ -13,7 +13,9 @@ import config from "sapper/config/rollup.js";
 import pkg from "./package.json";
 import * as Dotenv from "dotenv";
 
-Dotenv.config({ path: Path.join(__dirname, "dev.env") });
+process.env.NODE_ENV === "development" &&
+  Dotenv.config({ path: Path.join(__dirname, "dev.env") });
+
 if (!process.env.WS_URL) throw new Error("WS_URL not defined");
 
 const mode = process.env.NODE_ENV;
