@@ -1,26 +1,27 @@
 {
-	"scripts": {
-		"postinstall": "cd client && npm install"
-	},
-	"devDependencies": {
-		"@types/node": "^14.14.35",
-		"@types/redis": "^2.8.28",
-		"@types/ws": "^7.4.0",
-		"prettier": "^2.2.1",
-		"rollup": "^2.41.5",
-		"sapper": "^0.29.1",
-		"ts-node": "^9.1.1",
-		"ts-node-dev": "^1.1.6",
-		"tsconfig-paths": "^3.9.0",
-		"ttypescript": "^1.5.12",
-		"typescript": "^4.2.3"
-	},
-	"dependencies": {
-		"dotenv": "^8.2.0",
-		"path-to-regexp": "^6.2.0",
-		"redis": "^3.0.2",
-		"serverless-http": "^2.7.0",
-		"uid": "^2.0.0",
-		"ws": "^7.4.4"
-	}
+  "scripts": {
+    "postinstall": "cd client && npm install",
+    "netlify:build": "(cd client && npm run build) && ./scripts/netlify.sh"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.35",
+    "@types/redis": "^2.8.28",
+    "@types/ws": "^7.4.0",
+    "prettier": "^2.2.1",
+    "rollup": "^2.41.5",
+    "sapper": "^0.29.1",
+    "ts-node": "^9.1.1",
+    "ts-node-dev": "^1.1.6",
+    "tsconfig-paths": "^3.9.0",
+    "ttypescript": "^1.5.12",
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "path-to-regexp": "^6.2.0",
+    "redis": "^3.0.2",
+    "serverless-http": "^2.7.0",
+    "uid": "^2.0.0",
+    "ws": "^7.4.4"
+  }
 }
