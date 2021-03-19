@@ -1,7 +1,5 @@
 {
   "scripts": {
-    "install": "cd client && npm install",
-    "netlify:build": "(cd client && npm run build) && ./scripts/netlify.sh"
   },
   "devDependencies": {
     "@types/node": "^14.14.35",
