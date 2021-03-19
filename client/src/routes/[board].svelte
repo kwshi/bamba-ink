@@ -60,7 +60,7 @@
 
   onMount(() => {
     ws = new WebSocket(
-      `ws://${Cfg.wsUrl}/ws/board/${encodeURIComponent(boardKey)}`
+      `${Cfg.wsUrl}/ws/board/${encodeURIComponent(boardKey)}`
     );
 
     ws.addEventListener("open", () => {
