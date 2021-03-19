@@ -1,5 +1,5 @@
 {
-  "scripts": { "build": "tsc", "start": "node dist" },
+  "scripts": { "build": "tsc -b", "start": "node dist" },
   "dependencies": { "redis": "^3.0.2", "ws": "^7.4.4" },
   "devDependencies": {
     "@types/node": "^14.14.35",
